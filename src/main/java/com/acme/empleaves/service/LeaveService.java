@@ -4,6 +4,7 @@ import com.acme.empleaves.model.Employee;
 import com.acme.empleaves.model.Leave;
 import com.acme.empleaves.model.LeaveBalance;
 import com.acme.empleaves.model.LeaveBenefits;
+import com.acme.empleaves.model.LeaveType;
 import com.acme.empleaves.repo.EmployeeRepository;
 import com.acme.empleaves.repo.LeaveBenefitsRepository;
 import com.acme.empleaves.repo.LeaveRepository;
@@ -96,8 +97,14 @@ public class LeaveService implements ILeaveService {
       Map<String, Integer> leaveBenefitsMap = benefits.getMaxLeaveEligibilityMap();
       for(Map.Entry<String, Integer> entry: leaveBenefitsMap.entrySet()){
         LeaveBalance balance = leaveBalanceIntegerMap.get(entry.getKey());
-        balance.setEarned(new Double(entry.getValue()));
-        leaveBalanceIntegerMap.put(entry.getKey(), balance);
+        if (null != balance) {
+          balance.setEarned(new Double(entry.getValue()));
+          leaveBalanceIntegerMap.put(entry.getKey(), balance);
+        }else {
+          balance = new LeaveBalance(LeaveType.valueOf(entry.getKey()));
+          balance.setEarned(new Double(entry.getValue()));
+          leaveBalanceIntegerMap.put(entry.getKey(), balance);
+        }
       }
 
       leaveBalances = new ArrayList<>(leaveBalanceIntegerMap.values());

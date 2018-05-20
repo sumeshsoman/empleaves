@@ -38,6 +38,7 @@ public class LeaveBalance implements Serializable {
 
     public void setEarned(Double earned) {
         this.earned = earned;
+        updateBalance();
     }
 
     public Double getTaken() {
@@ -46,15 +47,20 @@ public class LeaveBalance implements Serializable {
 
     public void setTaken(Double taken) {
         this.taken = taken;
+        updateBalance();
     }
 
     public void addToTaken(int number){
         this.taken += number;
+        updateBalance();
+    }
+
+    private void updateBalance(){
+        this.balance =  this.earned - this.taken;
     }
 
     public Double getBalance() {
-        this.balance =  this.earned - this.taken;
-        return balance;
+        return this.balance;
     }
 
     public void setBalance(Double balance) {
@@ -73,5 +79,15 @@ public class LeaveBalance implements Serializable {
     public int hashCode() {
 
         return Objects.hash(leaveType);
+    }
+
+    @Override
+    public String toString() {
+        return "LeaveBalance{" +
+                "leaveType=" + leaveType.toString() +
+                ", earned=" + earned +
+                ", taken=" + taken +
+                ", balance=" + balance +
+                '}';
     }
 }

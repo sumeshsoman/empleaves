@@ -2,6 +2,7 @@ package com.acme.empleaves.service;
 
 import com.acme.empleaves.model.Employee;
 import com.acme.empleaves.model.Leave;
+import com.acme.empleaves.model.LeaveBalance;
 import com.acme.empleaves.model.LeaveBenefits;
 import com.acme.empleaves.model.LeaveState;
 import com.acme.empleaves.model.LeaveType;
@@ -22,6 +23,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -116,5 +118,25 @@ public class ILeaveServiceTest {
   }
 
   @Test
-  public void findLeaveBalanceByEmployee() {}
+  public void findLeaveBalanceByEmployee() {
+    Employee employee = employeeRepository.findAll().iterator().next();
+    Assert.assertNotNull(employee);
+    List<LeaveBalance> leaveBalances = leaveService.findLeaveBalanceByEmployee(employee.getId());
+    Assert.assertEquals(3, leaveBalances.size());
+    leaveBalances.stream().sorted(Comparator.comparingDouble(LeaveBalance::getEarned));
+
+    leaveBalances.stream().forEach(e -> System.out.println(e.toString()));
+
+    LeaveBalance annual = leaveBalances.get(0);
+    LeaveBalance sick = leaveBalances.get(1);
+    LeaveBalance training = leaveBalances.get(2);
+
+    Assert.assertEquals(LeaveType.ANNUAL, annual.getLeaveType());
+    Assert.assertEquals(LeaveType.SICK, sick.getLeaveType());
+    Assert.assertEquals(LeaveType.TRAINING, training.getLeaveType());
+    Assert.assertEquals(Double.valueOf(20.0), annual.getEarned());
+    Assert.assertEquals(Double.valueOf(18.0), annual.getBalance());
+    Assert.assertEquals(Double.valueOf(2.0), annual.getTaken());
+
+  }
 }
