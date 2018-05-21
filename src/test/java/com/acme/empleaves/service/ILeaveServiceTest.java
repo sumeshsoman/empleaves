@@ -96,7 +96,7 @@ public class ILeaveServiceTest {
   public void findLeavesByEmployee() {
     Employee employee = employeeRepository.findAll().iterator().next();
     Assert.assertNotNull(employee);
-    Assert.assertEquals(2, employee.getMyAppliedLeaves());
+    Assert.assertEquals(2, employee.getMyAppliedLeaves().size());
     List<Leave> leaveList = leaveService.findLeavesByEmployee(employee.getId());
     Assert.assertEquals(2, leaveList.size());
   }

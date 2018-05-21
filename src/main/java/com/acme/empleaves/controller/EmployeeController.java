@@ -136,8 +136,6 @@ public class EmployeeController {
     )
     public ResponseEntity<List<LeaveBalance>> getEmployeeLeaveBalance(@PathVariable("id") String id) {
         HttpStatus status = HttpStatus.OK;
-        LocalDate date = LocalDate.now();
-
         List<LeaveBalance> leaveBalances = leaveService.findLeaveBalanceByEmployee(Long.valueOf(id));
         return new ResponseEntity<>(leaveBalances, status);
     }
